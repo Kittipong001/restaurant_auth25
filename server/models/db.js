@@ -11,7 +11,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
 const testConnection = async () => {
   try {
     await sequelize.authenticate();
-    console.log("Connection has been etablished succesfully");
+    console.log("Connection has been etablished successfully");
   } catch (error) {
     console.log("Unable to connect to the database", error);
   }

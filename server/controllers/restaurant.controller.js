@@ -1,27 +1,23 @@
-import { where } from "sequelize";
 import Restaurant from "../models/restaurant.model.js";
-
 const restaurantController = {};
-//Create and save a new restaurant
+//create and save a new restaurant
 restaurantController.create = async (req, res) => {
-  const { name, type, imageUrl } = req.body;
+  const { title, type, img } = req.body;
   //validate data
-  if (!name || !type || !imageUrl) {
-    res
-      .status(400)
-      .send({ message: "Name, Type or ImageUrl can not be empty!" });
+  if (!title || !type || !img) {
+    res.status(400).send({ message: "Title, Type or Img can not be empty" });
     return;
   }
 
-  await Restaurant.findOne({ where: { name: name } }).then((restaurant) => {
+  await Restaurant.findOne({ where: { title: title } }).then((restaurant) => {
     if (restaurant) {
-      res.status(400).send({ message: "Restaurant is already exists!" });
+      res.status(400).send({ message: "Restaurant already exists!" });
       return;
     }
     const newRestaurant = {
-      name: name,
-      type: type,
-      imageUrl: imageUrl,
+      title,
+      type,
+      img,
     };
 
     Restaurant.create(newRestaurant)
@@ -36,7 +32,7 @@ restaurantController.create = async (req, res) => {
       });
   });
 };
-//Get All Restaurants
+//Get All restaurant
 restaurantController.getAll = async (req, res) => {
   await Restaurant.findAll()
     .then((data) => {
@@ -44,7 +40,7 @@ restaurantController.getAll = async (req, res) => {
     })
     .catch((error) => {
       res.status(500).send({
-        message: error.message || "Something error while getAll the restaurant",
+        message: error.message || "Somethig error while getting all restaurant",
       });
     });
 };
@@ -62,23 +58,22 @@ restaurantController.getById = async (req, res) => {
     .catch((error) => {
       res.status(500).send({
         message:
-          error.message || "Something error while getById the restaurant" + id,
+          error.message ||
+          "Somethig error while getting restaurant with id" + id,
       });
     });
 };
-//Update Restaurant By Id
-restaurantController.updateById = async (req, res) => {
+//Update a Restaurant ById
+restaurantController.update = async (req, res) => {
   const id = req.params.id;
-  const { name, type, imageUrl } = req.body;
+  const { title, type, img } = req.body;
   //validate data
-  if (!name && !type && !imageUrl) {
-    res
-      .status(404)
-      .send({ message: "Name, Type and ImageUrl can not be empty!" });
+  if (!title && !type && !img) {
+    res.status(400).send({ message: "Title, Type and Img can not be empty!" });
     return;
   }
   await Restaurant.update(
-    { name, type, imageUrl },
+    { title, type, img },
     {
       where: { id },
     }
@@ -89,39 +84,38 @@ restaurantController.updateById = async (req, res) => {
       } else {
         res.status(404).send({
           message:
-            "Cannot update restaurant with " +
+            "Cannot update restaurant with id " +
             id +
-            ". Maybe restaurant was not found.",
+            ".Maybe restaurant was not found.",
         });
       }
     })
     .catch((error) => {
       res.status(500).send({
-        message: error.message || "Something error while Update the restaurant",
+        message: error.message || "Somethig error while getting all restaurant",
       });
     });
 };
-//Delete Restaurants By Id
+//Delete a REstaurant by Id
 restaurantController.deleteById = async (req, res) => {
   const id = req.params.id;
   if (!id) {
-    res.status(404).send({ message: "Id is missing!" });
+    res.status(404).send({ message: "Id is missing" });
     return;
   }
   await Restaurant.destroy({ where: { id } })
     .then((num) => {
       if (num === 1) {
-        res.send({ message: "Restaurant was deleted successfully!" });
+        res.send({ message: "Restaurant was deleted successfully" });
       } else {
         res.status(404).send({
-          message: "Cannot delete Restaurant with id " + id + ".",
+          message: "Cannot delete restaurant with id " + id + ".",
         });
       }
     })
     .catch((error) => {
       res.status(500).send({
-        message:
-          error.message || "Something error while Deleting the restaurant",
+        message: error.message || "Somethig error while getting all restaurant",
       });
     });
 };
