@@ -1,27 +1,28 @@
-import { Sequelize } from "sequelize";
-import dbConfig from "../config/db.config.js";
+const { Sequelize } = require("sequelize");
+const dbConfig = require("../config//db.config");
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
-  port: dbConfig.PORT,
-  dialect: dbConfig.dialect,
+  port: dbConfig.DBPORT,
+  dialect: dbConfig.DIALECT,
   logging: false,
-  omiNull: true,
-  dialectOptions,
-  ssl: {
-    required: true,
-    rejectUnauthorized: false,
+  omitNull: true,
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false, // ไม่แนะนำใน production
+    },
   },
 });
 
-const testConnection = async () => {
+testConnection = async () => {
   try {
     await sequelize.authenticate();
     console.log("Connection has been etablished successfully");
   } catch (error) {
-    console.log("Unable to connect to the database", error);
+    console.log("Unable to connect to the database!", error);
   }
 };
 
 testConnection();
-export default sequelize;
+module.exports = sequelize;

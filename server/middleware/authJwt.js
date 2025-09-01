@@ -1,6 +1,7 @@
-import jwt from "jsonwebtoken";
-import authconfig from "../config/auth.config.js";
-import db from "../models/index.js";
+const jwt = require("jsonwebtoken");
+const authConfig = require("../config/auth.config");
+const db = require("../models/index");
+
 const User = db.User;
 
 const verifyToken = (req, res, next) => {
@@ -8,12 +9,16 @@ const verifyToken = (req, res, next) => {
   if (!token) {
     return res.status(403).send({ message: "No Token Provided!" });
   }
-  jwt.verify(token, authconfig.secret, (err, decoded) => {
+
+  jwt.verify(token, authConfig.secret, (err, decoded) => {
+    // encoded เข้ารหัส
+    // decoded ถอดรหัส
     if (err) {
-      return res.status(401).senf({ message: "Unauthorized!" });
+      return res.status(401).send({ message: "Unauthorized!" });
     }
     req.username = decoded.username;
     next();
+    // next คือส่งให้ node ทำงานต่อไป
   });
 };
 
@@ -21,7 +26,7 @@ const isAdmin = (req, res, next) => {
   User.findByPk(req.username).then((user) => {
     user.getRoles().then((roles) => {
       for (let i = 0; i < roles.length; i++) {
-        if (roles[i].roleName === "admin") {
+        if (roles[i].name === "admin") {
           next();
           return;
         }
@@ -37,7 +42,7 @@ const isModOrAdmin = (req, res, next) => {
   User.findByPk(req.username).then((user) => {
     user.getRoles().then((roles) => {
       for (let i = 0; i < roles.length; i++) {
-        if (roles[i].roleName === "moderator" ) {
+        if (roles[i].name === "admin" || roles[i].name === "moderator") {
           next();
           return;
         }
@@ -48,5 +53,6 @@ const isModOrAdmin = (req, res, next) => {
     });
   });
 };
+
 const authJwt = { verifyToken, isAdmin, isModOrAdmin };
-export default authJwt;
+module.exports = authJwt;

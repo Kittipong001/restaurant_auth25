@@ -1,42 +1,44 @@
 import { createBrowserRouter } from "react-router";
-import Add from "../pages/Add";
+
+import AddRestaurant from "../pages/AddRestaurant";
 import Home from "../pages/Home";
 import Update from "../pages/Update";
-import Register from "../pages/Register";
-import Login from "../pages/Login";
+import Signin from "../pages/Signin";
+import Signup from "../pages/Signup";
 import NotAllowed from "../pages/NotAllowed";
 import AdminPage from "../pages/AdminPage";
-import ModOrAdminPage from "../pages/ModOrAdminPage";
 import UserPage from "../pages/UserPage";
 import Profile from "../pages/Profile";
+import AdminAndModerator from "../pages/AdminAndModerator";
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
   },
   {
+    path: "/update/:id",
+    element: (
+      <AdminAndModerator>
+        <Update />
+      </AdminAndModerator>
+    ),
+  },
+  {
     path: "/add",
     element: (
       <AdminPage>
-        <Add />
+        <AddRestaurant />
       </AdminPage>
     ),
   },
   {
-    path: "/update/:id",
-    element: (
-      <ModOrAdminPage>
-        <Update />
-      </ModOrAdminPage>
-    ),
+    path: "/signin",
+    element: <Signin />,
   },
   {
-    path: "/register",
-    element: <Register />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
+    path: "/signup",
+    element: <Signup />,
   },
   {
     path: "/notallowed",
@@ -51,4 +53,5 @@ const router = createBrowserRouter([
     ),
   },
 ]);
+
 export default router;

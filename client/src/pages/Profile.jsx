@@ -1,38 +1,41 @@
-import React from "react";
-import { useAuthContext } from "../context/AuthContext";
-
-const handleLogOut = () => {
-  logout();
-};
-
 const Profile = () => {
   return (
-    <div>
-      <main className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-primary/10 via-base-200 to-secondary/10 px-4">
-        <div className="card w-full max-w-md bg-base-100 shadow-2xl rounded-2xl border border-base-300">
-          <div className="card-body items-center text-center">
-            {/* Avatar */}
-            <div className="avatar mb-4">
-              <div className="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 shadow-lg">
-                <img src="https://i.pravatar.cc/300" alt="Profile" />
-              </div>
-            </div>
-
-            {/* Name & Job */}
-            <h2 className="card-title text-3xl font-bold">John Doe</h2>
-            <p className="text-base-content/70 mb-2">Full Stack Developer</p>
-            {/* Divider */}
-            <div className="divider my-4"></div>
-            {/* Actions */}
-            <div className="card-actions flex flex-col sm:flex-row gap-3 w-full">
-              <button className="btn btn-primary flex-1">แก้ไขโปรไฟล์</button>
-              <a className="btn btn-outline flex-1" onClick={handleLogOut}>
-                ออกจากระบบ
-              </a>
-            </div>
-          </div>
-        </div>
-      </main>
+    <div className="max-w-md mx-auto mt-10 bg-white rounded-xl shadow-md overflow-hidden text-center p-6">
+      <img
+        src="https://i.pravatar.cc/150?img=12"
+        alt="Profile"
+        className="w-32 h-32 mx-auto rounded-full border-4 border-blue-500 object-cover"
+      />
+      <h2 className="mt-4 text-2xl font-bold text-gray-800">สมชาย ใจดี</h2>
+      <p className="text-blue-600 font-medium mt-1">Frontend Developer</p>
+      <p className="mt-4 text-gray-600 text-sm">
+        สวัสดีครับ ผมเป็นนักพัฒนาเว็บไซต์ที่มีความชำนาญด้าน React
+        และมีประสบการณ์ในการสร้าง UI ที่สวยงามและใช้งานง่าย
+      </p>
+      <div className="mt-6 flex justify-center space-x-4">
+        <a
+          href="https://facebook.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:text-blue-700 font-semibold transition duration-200"
+        >
+          🌐 Facebook
+        </a>
+        <a
+          href="https://github.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-800 hover:text-black font-semibold transition duration-200"
+        >
+          💻 GitHub
+        </a>
+        <a
+          href="mailto:somchai@example.com"
+          className="text-red-500 hover:text-red-700 font-semibold transition duration-200"
+        >
+          📧 Email
+        </a>
+      </div>
     </div>
   );
 };

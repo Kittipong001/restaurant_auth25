@@ -1,16 +1,29 @@
 import React from "react";
+import { useAuthContext } from "../context/AuthContext";
+import UserProfile from "./UserProfile";
 
 const Navbar = () => {
+  const { user } = useAuthContext();
+  // console.log(user)
+
   const menuItems = [
     {
-      name: "Add Restaurant",
-      url: "/NewRestaurant",
+      name: "Search",
+      url: "/",
     },
     {
-      name: "About Us",
+      name: "Add restaurant",
+      url: "/add",
+    },
+    {
+      name: "About us",
       url: "/",
     },
   ];
+
+  // if (user?.authorities.includes('ROLES_USER')) {
+  // }
+
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="navbar-start">
@@ -36,9 +49,9 @@ const Navbar = () => {
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
           >
-            {menuItems.map((item) => {
+            {menuItems.map((item, i) => {
               return (
-                <li>
+                <li key={i}>
                   <a href={item.url}>{item.name}</a>
                 </li>
               );
@@ -46,14 +59,14 @@ const Navbar = () => {
           </ul>
         </div>
         <a href="/" className="btn btn-ghost text-xl">
-          Grab Restaurant
+          daisyUI
         </a>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
-          {menuItems.map((item) => {
+          {menuItems.map((item, idx) => {
             return (
-              <li>
+              <li key={idx}>
                 <a href={item.url}>{item.name}</a>
               </li>
             );
@@ -61,8 +74,18 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="navbar-end space-x-2">
-        <button className="btn btn-soft btn-primary">Resgister</button>
-        <button className="btn btn-soft btn-success ">Login</button>
+        {user ? (
+          <UserProfile />
+        ) : (
+          <div>
+            <a href="/signup" className="btn btn-outline btn-secondary">
+              Register
+            </a>
+            <a href="/signin" className="btn btn-outline btn-accent">
+              Login
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );

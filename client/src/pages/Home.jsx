@@ -1,55 +1,66 @@
-import React,{useState, useEffect} from "react";
-import Restaurants from "../Component/Restaurants";
-import RestaurantService from "../service/restaurant.service";
-import swal from "sweetalert2";
-
+import React, { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
+import Restaurants from "../components/Restaurants";
+import Swal from "sweetalert2";
+import RestaurantService from "../services/retaurant.service";
 
 const Home = () => {
-  const [restaurant,setRestaurants] = useState([]);
-  const [filetedRestaurants,setFilteredRestaurants] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
+  const [filteredRestaurant, setFilteredRestaurant] = useState([]);
 
-  const handleSearch = (keyword) => {
-    if(keyword ===""){
-      setFilteredRestaurants(restaurant);
-      return;
-    }
-    const result = restaurant.filter((restaurant)=>{
-      return (
-        restaurant.title.toLowerCase().includes(keyword.toLowerCase()) ||
-        restaurant.type.toLowerCase().includes(keyword.toLowerCase())
-      );
-    });
-setFilteredRestaurants(result);
-  };
-  useEffect(()=>{
-    const getAllRestaurants = async () =>{
+  useEffect(() => {
+    // call api: GetAllRestaurants
+    const getAllRestaurant = async () => {
       try {
         const response = await RestaurantService.getAllRestaurants();
-        console.log(response);
 
-        if (response.status === 200){
+        if (response.status === 200) {
           setRestaurants(response.data);
-          setFilteredRestaurants(response.data);
+          setFilteredRestaurant(response.data);
         }
-      }catch (error) {
-        swal.fire({
-          title:"Get All Restaurants",
-          text: error?.response?.data?.message || error.message
+      } catch (error) {
+        Swal.fire({
+          title: "Get All restaurants",
+          icon: "error",
+          text: error?.response?.data?.message || error.message,
         });
       }
     };
-    getAllRestaurants();
-  },[]);
+    getAllRestaurant();
+  }, []);
+
+  const handleSearch = (keyword) => {
+    if (keyword === "") {
+      setFilteredRestaurant(restaurants);
+      return;
+    }
+
+    const result = restaurants.filter((restaurant) => {
+      return (
+        restaurant.name
+          .toLocaleLowerCase()
+          .includes(keyword.toLocaleLowerCase()) ||
+        restaurant.type
+          .toLocaleLowerCase()
+          .includes(keyword.toLocaleLowerCase())
+      );
+    });
+    setFilteredRestaurant(result);
+    // console.log(result)
+  };
 
   return (
     <div className="container mx-auto">
+      {/* Navigation */}
+      {/* Header */}
       <div>
-        <h1 className="titel-justify-center text-3xl text-center m-5 p-5">
-          Grad Restaurant
+        <h1 className="justify-center text-3xl text-center m-5 p-5">
+          Grab Restaurant 666
         </h1>
       </div>
+      {/* Search Box */}
       <div className="mb-5 flex justify-center items-center">
-        <label className="input flex item-center gap-2 w-5xl">
+        <label className="input flex items-center gap-2 w-2xl">
           <svg
             className="h-[1em] opacity-50"
             xmlns="http://www.w3.org/2000/svg"
@@ -66,15 +77,17 @@ setFilteredRestaurants(result);
               <path d="m21 21-4.3-4.3"></path>
             </g>
           </svg>
-          <input 
-          type="search" 
-          name="keyword" 
-          onChange={(e) => handleSearch(e.target.value)} 
-          required 
-          placeholder="Search" />
+          <input
+            type="search"
+            required
+            placeholder="Search"
+            name="keyword"
+            onChange={(e) => handleSearch(e.target.value)}
+          />
         </label>
       </div>
-      <Restaurants restaurant={filetedRestaurants}/>
+      {/* Result */}
+      <Restaurants restaurants={filteredRestaurant} />
     </div>
   );
 };

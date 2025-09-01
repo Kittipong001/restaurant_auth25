@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Drop from "../components/Drop";
-import { useParams } from "react-router";
 import { useAuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 import RestaurantService from "../services/retaurant.service";
 
-const Update = () => {
+const AddRestaurant = () => {
   const { user } = useAuthContext();
 
-  // 1. Get from url
-  const { id } = useParams();
+  const [restaurant, setRestaurant] = useState({
+    name: "",
+    type: "",
+    imageUrl: "",
+  });
 
   const navigate = useNavigate();
 
@@ -23,64 +25,22 @@ const Update = () => {
     }
   }, [user]);
 
-  const [restaurant, setRestaurant] = useState({
-    name: "",
-    type: "",
-    imageUrl: "",
-  });
-
-  //  2. Get Restaurant by ID
-  useEffect(() => {
-    const updateRestaurant = async (id) => {
-      try {
-        const resp = await RestaurantService.getRestaurantById(id);
-        if (resp.status === 200) {
-          setRestaurant(resp.data);
-        }
-      } catch (error) {
-        Swal.fire({
-          title: "Get All restaurants",
-          icon: "error",
-          text: error?.response?.data?.message || error.message,
-        });
-      }
-    };
-    updateRestaurant(id);
-
-    // fetch(`http://localhost:5000/api/v1/restaurant/${id}`)
-    //     .then((res) => {
-    //         //  convert text to json format
-    //         return res.json();
-    //     })
-    //     .then((resp) => {
-    //         // save to state
-    //         setRestaurant(resp)
-    //     })
-    //     .catch((e) => {
-    //         // catch error
-    //         console.log(e.message)
-    //     })
-  }, [id]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setRestaurant({ ...restaurant, [name]: value }); // {...restaurant clone ของเดิม
   };
 
   const handleSubmit = async () => {
     try {
       // async await
-      // const response = await fetch(`http://localhost:5000/api/v1/restaurant/${id}`, {
-      //     method: "PUT",
-      //     body: JSON.stringify(restaurant),
-      //     headers: {
-      //         "Content-Type": "application/json"
-      //     }
-      // })
-      const resp = await RestaurantService.editRestaurantById(id, restaurant);
+      const response = await RestaurantService.insertRestaurant(restaurant);
+
       if (response.status === 200) {
-        alert("Restaurant Updated successfully!");
+        Swal.fire({
+          title: "Add Restaurant",
+          text: "Restaurant added successfully!",
+          icon: "success",
+        });
         setRestaurant({
           name: "",
           type: "",
@@ -88,7 +48,11 @@ const Update = () => {
         });
       }
     } catch (e) {
-      console.log(e);
+      Swal.fire({
+        title: "Add Restaurants",
+        icon: "error",
+        text: error?.response?.data?.message || e.message,
+      });
     }
   };
 
@@ -96,7 +60,7 @@ const Update = () => {
     <>
       <div className="flex justify-center items-center text-center mt-5">
         <form className="border w-[500px] space-y-5 p-10 rounded-2xl shadow-lg shadow-cyan-500/50">
-          <div>Update</div>
+          <div>Add</div>
           <div className="space-x-2">
             <Drop />
             <input
@@ -142,7 +106,7 @@ const Update = () => {
               type="submit"
               className="bg-linear-to-r rounded-[2px] shadow-lg shadow-blue-500/50 from-blue-500 to-blue-800 w-[100px] cursor-pointer"
             >
-              Update
+              Add
             </button>
           </div>
           <div>
@@ -162,4 +126,4 @@ const Update = () => {
   );
 };
 
-export default Update;
+export default AddRestaurant;

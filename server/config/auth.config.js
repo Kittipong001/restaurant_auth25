@@ -1,8 +1,6 @@
-import dotenv from "dotenv";
+const dotenv = require("dotenv");
 dotenv.config();
 
-const config = {
+module.exports = {
   secret: process.env.JWT_SECRET,
 };
-
-export default config;

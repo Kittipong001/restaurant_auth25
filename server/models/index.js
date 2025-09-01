@@ -1,35 +1,23 @@
-import sequelize from "./db.js";
-import Sequelize from "sequelize"
-import User from "./user.model.js"
-import Role from "./role.model.js"
+const sequelize = require("./db");
+const Sequelize = require("sequelize");
 
+const User = require("./user.model");
+const Role = require("./role.model");
 
 const db = {};
-
-
-// S ตัวเล็ก
 db.sequelize = sequelize;
-// S ตัวใหญ่
 db.Sequelize = Sequelize;
-
 
 db.User = User;
 db.Role = Role;
 
-
-// Association
+// association
 db.User.belongsToMany(db.Role, {
-    through: "user_roles",
-    foreignKey: "userId",
-    otherKey: "roleId",
+  through: "user_roles",
 });
-
 
 db.Role.belongsToMany(db.User, {
-    through: "user_roles",
-    foreignKey: "roleId",
-    otherKey: "userId",
+  through: "user_roles",
 });
 
-
-export default db;
+module.exports = db;

@@ -1,14 +1,16 @@
-import sequelize from "./db.js";
-import { DataTypes } from "sequelize";
-
+const { DataTypes } = require("sequelize");
+const sequelize = require("./db");
 
 const User = sequelize.define("user", {
   username: {
     type: DataTypes.STRING,
-    allowNull: false,
     primaryKey: true,
   },
-  fullName: {
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  password: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -16,20 +18,14 @@ const User = sequelize.define("user", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  }
 });
-
 
 User.sync({ force: false })
   .then(() => {
-    console.log("Table created or already exists");
+    console.log("Table created or already existed");
   })
   .catch((error) => {
-    console.error("Error creating table", error);
+    console.log("Error creating table", error);
   });
 
-
-export default User;
+module.exports = User;

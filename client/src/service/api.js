@@ -1,6 +1,7 @@
-import axios from "axios"
+import axios from "axios";
+import ToKenService from "./token.service";
+
 const baseURL = import.meta.env.VITE_BASE_URL;
-import TokenService from "./token.service";
 
 const instance = axios.create({
   baseURL: baseURL,
@@ -9,12 +10,13 @@ const instance = axios.create({
   },
 });
 
-//add interceptor to request object
+// ดักจับ request object
+// add interceptor to request object
+// use = middleware
 instance.interceptors.request.use(
   (config) => {
-    //recieve after logged in
-    //TODO
-    const token = TokenService.getLocalAccessToken();
+    // recieve after logged in
+    const token = ToKenService.getLocalAccessToken();
     if (token) {
       config.headers["x-access-token"] = token;
     }
@@ -24,6 +26,5 @@ instance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
 
 export default instance;
