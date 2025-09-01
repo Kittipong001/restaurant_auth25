@@ -5,6 +5,7 @@ import restaurantRouter from "./routers/restaurant.router.js";
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 import cors from "cors";
+const FRONTEND_URL = process.env.FRONTEND_URL;
 app.use(
   cors({
     origin: ["http://localhost:5173", "127.0.0.1:5173"],
